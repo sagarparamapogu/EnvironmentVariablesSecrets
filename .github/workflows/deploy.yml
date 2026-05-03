@@ -10,8 +10,8 @@ jobs:
   test:
     env: 
       MONGODB_CLUSTER_ADDRESS: bmoclouddb.ihmbdxd.mongodb.net
-      MONGODB_USERNAME: BMOSuperUser
-      MONGODB_PASSWORD: j24Ig9DMbkWAeago
+      MONGODB_USERNAME: ${ { secrets.MONGODB_USERNAME } }
+      MONGODB_PASSWORD: ${ { secrets.MONGODB_PASSWORD } }
       PORT: 8080
     runs-on: ubuntu-latest
     steps:
