@@ -5,15 +5,16 @@ on:
       - main
       - dev
 env:
-  MONGO_DB_NAME: BMOCloudDB
+  MONGODB_DB_NAME: BMOCloudDB
 jobs:
   test:
-    env: 
-      MONGODB_CLUSTER_ADDRESS: bmoclouddb.ihmbdxd.mongodb.net
-      MONGODB_USERNAME: ${ { secrets.MONGODB_USERNAME } }
-      MONGODB_PASSWORD: ${ { secrets.MONGODB_PASSWORD } }
-      PORT: 8080
+    environment: testing
     runs-on: ubuntu-latest
+    env:
+      MONGODB_CLUSTER_ADDRESS: bmoclouddb.ihmbdxd.mongodb.net
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      PORT: 8080
     steps:
       - name: Get Code
         uses: actions/checkout@v3
@@ -25,15 +26,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:${PORT}
+        run: npm start & npx wait-on http://127.0.0.1:$PORT # requires MongoDB Atlas to accept requests from anywhere!
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: |
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
+        env:
+          PORT: 3000
         run: |        
-          echo "..."
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+          echo "${{ env.PORT }}"
