@@ -5,7 +5,7 @@ on:
       - main
       - dev
 env:
-  MONGO_DB_NAME: gh-demo
+  MONGO_DB_NAME: BMOCloudDB
 jobs:
   test:
     env: 
